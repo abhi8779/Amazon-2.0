@@ -2,7 +2,7 @@ import "./Product.css";
 import { useStore } from "../store/store-context-provider";
 
 const Product = ({ id, title, image, price, rating, quantity }) => {
-  const [{}, dispatchFn] = useStore();
+  const [, dispatchFn] = useStore();
 
   const AddToBasketHandler = () => {
     dispatchFn({

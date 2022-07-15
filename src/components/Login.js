@@ -1,17 +1,11 @@
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import useFormInputValidation from "../hooks/useFormInputValidation";
-import { app } from "../firebaseSetup";
+import { auth } from "../firebaseSetup";
 import "./Login.css";
 import { useState } from "react";
 
 const Login = () => {
   //firebase auth
-  const auth = getAuth(app);
   const navigate = useNavigate();
   const [registerActive, setRegisterActive] = useState(false);
 
@@ -47,11 +41,10 @@ const Login = () => {
     if (!overAllFromValid) return;
 
     if (registerActive) {
-      createUserWithEmailAndPassword(auth, email, password)
+      auth
+        .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
-          console.log(user);
 
           alert("Account Created Sucessfully");
           // ...
@@ -62,11 +55,10 @@ const Login = () => {
           // ..
         });
     } else {
-      signInWithEmailAndPassword(auth, email, password)
+      auth
+        .signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
-          console.log(user);
           navigate("/");
 
           // ...

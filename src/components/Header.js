@@ -1,14 +1,11 @@
 import "./Header.css";
-import { app } from "../firebaseSetup";
-import { getAuth } from "firebase/auth";
+import { auth } from "../firebaseSetup";
 import SearchIcon from "@mui/icons-material/Search";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store-context-provider";
 
 const Header = () => {
-  const auth = getAuth(app);
-
   const [{ totalCartItem, user }] = useStore();
 
   const authenticationHandler = () => {
@@ -44,10 +41,12 @@ const Header = () => {
             </span>
           </div>
         </Link>
-        <div className="header__nav__option">
-          <span className="header__optionLineOne">Returns</span>
-          <span className="header__optionLineTwo">& Orders</span>
-        </div>
+        <Link to="/orders">
+          <div className="header__nav__option">
+            <span className="header__optionLineOne">Returns</span>
+            <span className="header__optionLineTwo">& Orders</span>
+          </div>
+        </Link>
         <div className="header__nav__option">
           <span className="header__optionLineOne">Your</span>
           <span className="header__optionLineTwo">Prime</span>

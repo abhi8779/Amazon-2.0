@@ -2,7 +2,7 @@ import "./BasketItem.css";
 import { useStore } from "../store/store-context-provider";
 
 const BasketItem = ({ id, price, image, title, rating, quantity }) => {
-  const [{}, dispatchFn] = useStore();
+  const [, dispatchFn] = useStore();
 
   const removeFromBasketHandler = () => {
     console.log("rem");

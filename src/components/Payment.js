@@ -7,7 +7,6 @@ import CurrencyFormat from "react-currency-format";
 import BasketItem from "./BasketItem";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import "./Payment.css";
-import { collection, query, doc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseSetup";
 
 const Payment = () => {
@@ -40,87 +39,21 @@ const Payment = () => {
     getClientSecret();
   }, [cart]);
 
-  console.log("secret is >>>", clientSecret);
-  console.log("👱", user);
 
-  // const submitHandler = async (e) => {
-  //   //all srtipe stuff
-  //   e.preventDefault();
-  //   setProcessing(true);
-
-  //   const payload = await stripe
-  //     .confirmCardPayment(clientSecret, {
-  //       payment_method: {
-  //         card: elements.getElement(CardElement),
-  //       },
-  //     })
-  //     .then(async (response) => {
-  //       const paymentIntent = response.error.payment_intent;
-  //       console.log(paymentIntent);
-  //       console.log(user.uid);
-
-  //       // const q = query(collection(db, "users"));
-
-  //       // const querySnapshot = await getDocs(q);
-
-  //       // const queryData = querySnapshot.forEach((doc) => {
-  //       //   console.log(doc.id, " => ", doc.data());
-  //       // });
-  //       // console.log(queryData);
-
-  //       // paymentIntent = payment conformation
-
-  //       const cartCollectionRef = collection(db, "users", user.uid);
-  //       const orderCollectionRef = collection(db, "orders");
-
-  //       // await addDoc(cartCollectionRef, {
-  //       //   cart: cart,
-  //       //   amount: intent.amount,
-  //       //   created: intent.created,
-  //       // });
-  //       await setDoc(doc(db, "cities", user.uid), {
-  //         cart: cart,
-  //         amount: paymentIntent.amount,
-  //         created: paymentIntent.created,
-  //       });
-
-  //       // await setDoc(cartCollectionRef, );
-
-  //       // db.collection("users")
-  //       //   .document(user?.uid)
-  //       //   .collection("orders")
-  //       //   .document(paymentIntent.id)
-  //       //   .set({
-  //       //     cart: cart,
-  //       //     amount: paymentIntent.amount,
-  //       //     created: paymentIntent.created,
-  //       //   });
-
-  //       setSucceeded(true);
-  //       setError(null);
-  //       setProcessing(false);
-
-  //       dispatchFn({
-  //         type: "EMPTY_BASKET",
-  //       });
-
-  //       naviagte("/orders", { replace: true });
-  //     });
-  // };
-
-  //testing
   const submitHandler = async (event) => {
     // do all the fancy stripe stuff...
     event.preventDefault();
     setProcessing(true);
 
-    const payload = await stripe
+    await stripe
       .confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
         },
       })
-      .then(({ paymentIntent }) => {
+      .then((response) => {
+        const paymentIntent = response.error.payment_intent;
+
         // paymentIntent = payment confirmation
 
         db.collection("users")
@@ -128,7 +61,7 @@ const Payment = () => {
           .collection("orders")
           .doc(paymentIntent.id)
           .set({
-            basket: basket,
+            cart: cart,
             amount: paymentIntent.amount,
             created: paymentIntent.created,
           });
@@ -137,18 +70,17 @@ const Payment = () => {
         setError(null);
         setProcessing(false);
 
-        dispatch({
+        dispatchFn({
           type: "EMPTY_BASKET",
         });
 
-        history.replace("/orders");
+        naviagte("/orders", { replace: true });
       });
   };
 
   const cardElementChangeHandler = (e) => {
-    //listen fro changes in the CardElement
+    //listen gor changes in the CardElement
     // and display any errors ass the customer types details
-
     setDisabled(e.empty);
     setError(e.error ? e.error.message : "");
   };
@@ -157,7 +89,6 @@ const Payment = () => {
     <div className="payment">
       <div className="payment__container">
         <h1>Checkout ({<Link to="/checkout"> {cartItemCount}</Link>})</h1>
-
         <div className="payment__section">
           <div className="payment__title">
             <h3>Delivary Address</h3>
@@ -188,7 +119,7 @@ const Payment = () => {
 
               <div className="payment__priceConatiner">
                 <CurrencyFormat
-                  renderText={(value) => <h3>Order Total: {value}</h3>}
+                  renderText={(value) => <h4>Order Total: {value}</h4>}
                   decimalScale={2}
                   value={getBasketTotalFn(cart)} // Part of the homework
                   displayType="text"
