@@ -90,7 +90,7 @@ const Footer = () => {
           © Abhishek Bhandari. Copyright @107 & 2022. Any illegal reproduction
           of this content will result in immediate legal action. This website
           features materials protected by the Fair Use guidelines of Section 107
-          of the Copyright Act. All rights reserved to the copyright owners AB_{" "}
+          of the Copyright Act. All rights reserved to the copyright owners AB_
         </p>
 
         <big>Amazon CLone 2.0</big>
